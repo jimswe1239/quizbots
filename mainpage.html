@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Quizbots!</title>
+  </head>
+  <body>
+    <div id='roomSection'>
+      <form id='joinRoom' action="">
+        <input id="joinData" autocomplete="off" /><button>join room (individual player device)</button>
+      </form>
+      <form id='createRoom' action="">
+        <input id="createData" autocomplete="off" /><button>create room (projector, tv, shared screen, etc)</button>
+      </form>
+    </div>
+
+    <div id='initialScreenSection'>
+      <p>here are the messages for your server:</p>
+      <p id="serverName">servername</p>
+      <ul id="messages"></ul>
+    </div>
+
+    <div id='initialPlayerSection'>
+      <form id='messageForm' action="">
+        <input id="m" autocomplete="off" /><button>Send</button>
+      </form>
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    
+    <script>
+      $(function () {
+        var socket = io();
+        $('#joinRoom').submit(function(){
+          $('#roomSection').hide();
+          $('#serverName').text($('#joinData').val());
+          socket.emit('adduser', $('#joinData').val());
+          return false;
+        });
+
+        $('#createRoom').submit(function(){
+          $('#roomSection').hide();
+          $('#serverName').text($('#createData').val());
+          socket.emit('adduser', $('#createData').val());
+          return false;
+        });
+
+        $('#messageForm').submit(function(){
+          socket.emit('chat message', $('#m').val());
+          $('#m').val('');
+          return false;
+        });
+
+        socket.on('chat message', function(msg){
+          $('#messages').append($('<li>').text(msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+      });
+    </script>
+
+
+  </body>
+</html>
