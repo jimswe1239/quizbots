@@ -25,17 +25,10 @@
     <script>
       $(function () {
         var socket = io();
-        $('#joinRoom').submit(function(){
-          $('#roomSection').hide();
-          $('#serverName').text($('#joinData').val());
-          socket.emit('adduser', $('#joinData').val());
-          return false;
-        });
-
         $('#createRoom').submit(function(){
           $('#roomSection').hide();
           $('#serverName').text($('#createData').val());
-          socket.emit('adduser', $('#createData').val());
+          socket.emit('addserver', $('#createData').val());
           return false;
         });
 
