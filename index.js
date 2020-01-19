@@ -5,15 +5,31 @@ const nsp = io.of('/nsp');
 
 
 app.get('/', function(req, res){
-	res.sendFile(__dirname + '/mainpage.html');
+	res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/room', function(req, res){
-	res.sendFile(__dirname + '/room.html');
+app.get('/userpage', function(req, res){
+	res.sendFile(__dirname + '/userpage.html');
 });
+
+app.get('/serverpage', function(req, res){
+	res.sendFile(__dirname + '/serverpage.html');
+});
+
+servers = [];
 
 io.on('connection', function(socket,roomName){
 	socket.on('adduser', function(roomName){
+		//CHECK IF SERVERS CONTAINS ROOMNAME
+		socket.join(roomName);
+		socket.room = roomName;
+		// echo to client they've connected
+		// socket.emit('updatechat', 'SERVER', 'you have connected to room1');
+		// echo to room 1 that a person has connected to their room
+		socket.broadcast.to(roomName).emit('chat message', 'someone has connected to this room');
+	});
+	socket.on('addserver', function(roomName){
+		
 		socket.join(roomName);
 		socket.room = roomName;
 		// echo to client they've connected
@@ -23,6 +39,8 @@ io.on('connection', function(socket,roomName){
 	});
 
 	socket.on('chat message', function(msg){
+		//console.log("message content = "+msg);
+		//save to database or memory
 		io.sockets.in(socket.room).emit('chat message', msg);
 	});
 });

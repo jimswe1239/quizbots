@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Quizbots!</title>
+  </head>
+  <body>
+      <button onclick="window.location.href = 'userpage';">join room (individual player device)</button>
+      <button onclick="window.location.href = 'serverpage';">create room (projector, tv, shared screen, etc)</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    
+    <script>
+      $(function () {
+        var socket = io();
+        $('#joinRoom').submit(function(){
+          $('#roomSection').hide();
+          $('#serverName').text($('#joinData').val());
+          socket.emit('adduser', $('#joinData').val());
+          return false;
+        });
+
+        $('#createRoom').submit(function(){
+          $('#roomSection').hide();
+          $('#serverName').text($('#createData').val());
+          socket.emit('adduser', $('#createData').val());
+          return false;
+        });
+
+        $('#messageForm').submit(function(){
+          socket.emit('chat message', $('#m').val());
+          $('#m').val('');
+          return false;
+        });
+
+        socket.on('chat message', function(msg){
+          $('#messages').append($('<li>').text(msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+      });
+    </script>
+
+
+  </body>
+</html>
