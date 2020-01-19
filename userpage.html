@@ -8,9 +8,6 @@
       <form id='joinRoom' action="">
         <input id="joinData" autocomplete="off" /><button>join room (individual player device)</button>
       </form>
-      <form id='createRoom' action="">
-        <input id="createData" autocomplete="off" /><button>create room (projector, tv, shared screen, etc)</button>
-      </form>
     </div>
 
     <div id='initialScreenSection'>
@@ -34,16 +31,10 @@
       $(function () {
         var socket = io();
         $('#joinRoom').submit(function(){
-          $('#roomSection').hide();
-          $('#serverName').text($('#joinData').val());
-          socket.emit('adduser', $('#joinData').val());
-          return false;
-        });
-
-        $('#createRoom').submit(function(){
-          $('#roomSection').hide();
-          $('#serverName').text($('#createData').val());
-          socket.emit('adduser', $('#createData').val());
+          if(socket.emit('adduser', $('#joinData').val());){
+            $('#roomSection').hide();
+            $('#serverName').text($('#joinData').val());
+          }
           return false;
         });
 
